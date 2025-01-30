@@ -1,4 +1,4 @@
-name: Build Docker Image
+name: Deploy Terraform & Build Docker Image
 
 on:
   push:
@@ -12,6 +12,10 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  AWS_ACCOUNT_ID: "920373021859"  # Replace with your AWS account ID
+  AWS_REGION: "eu-west-1"  # Change to your AWS region
+
 jobs:
   docker:
     name: Build & Push Docker Image
@@ -23,8 +27,8 @@ jobs:
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: arn:aws:iam::<AWS_ACCOUNT_ID>:role/GitHubOIDC-Terraform-Docker
-          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/GitHubOIDC-Terraform-Docker
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         if: github.ref == 'refs/heads/main'
