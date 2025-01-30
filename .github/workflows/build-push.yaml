@@ -38,13 +38,17 @@ jobs:
       - name: Set Environment Variables
         run: |
           echo "ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY=my-app" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY=app" >> $GITHUB_ENV
           echo "IMAGE_TAG=$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
 
       - name: Build Docker Image
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-
+      
+      - name: Create ECR Repository if Not Exists
+        uses: int128/create-ecr-repository-action@v1
+        with:
+          repository: app
       - name: Push Docker Image to ECR
         if: github.ref == 'refs/heads/main'
         run: |
