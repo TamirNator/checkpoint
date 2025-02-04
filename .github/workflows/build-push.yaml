@@ -13,8 +13,8 @@ permissions:
   contents: read
 
 env:
-  AWS_ACCOUNT_ID: "920373021859"  # Replace with your AWS account ID
-  AWS_REGION: "eu-west-1"  # Change to your AWS region
+  AWS_ACCOUNT_ID: "920373021859"
+  AWS_REGION: "eu-west-1"
 
 jobs:
   docker:
@@ -27,7 +27,7 @@ jobs:
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/GitHubOIDC-Terraform-Docker
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/TamirGitHubOIDC
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
