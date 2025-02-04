@@ -53,3 +53,23 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+  update-helm:
+    name: Update Helm Chart with Latest SHA
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Update Helm Chart Values with Latest SHA
+        run: |
+          sed -i "s/^appVersion:.*/appVersion: \"$IMAGE_TAG\"/" deploy/app/Chart.yaml
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add helm/app/Chart.yaml
+          git commit -m "Update Helm Chart to commit $IMAGE_TAG"
+          git push
