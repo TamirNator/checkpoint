@@ -65,6 +65,7 @@ jobs:
 
       - name: Update Helm Chart Values with Latest SHA
         run: |
+          echo "IMAGE_TAG=$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
           sed -i "s/^appVersion:.*/appVersion: \"$IMAGE_TAG\"/" deploy/app/Chart.yaml
 
       - name: Commit and Push Changes
