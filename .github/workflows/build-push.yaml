@@ -63,9 +63,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Set Environment Variables
+        run: |
+          echo "ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY=app" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
+          
       - name: Update Helm Chart Values with Latest SHA
         run: |
-          echo "IMAGE_TAG=$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
           sed -i "s/^appVersion:.*/appVersion: \"$IMAGE_TAG\"/" deploy/app/Chart.yaml
 
       - name: Commit and Push Changes
