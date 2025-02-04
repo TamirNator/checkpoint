@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, request, request_started
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 counter = 0
@@ -14,5 +14,8 @@ def index():
     else:
         getCounter+=1
         return str(f"Our counter is: {getCounter} ")
+@app.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "healthy"}), 200
 if __name__ == '__main__':
     app.run(debug=True,port=5000,host='0.0.0.0')
